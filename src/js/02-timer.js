@@ -1,53 +1,42 @@
-// Описан в документации
+
 import flatpickr from "flatpickr";
-// Дополнительный импорт стилей
 import "flatpickr/dist/flatpickr.min.css";
 
 
 const startBth = document.querySelector('[data-start]');
+const inputEl = document.querySelector('#datetime-picker');
 
+const refs = {
+  days: document.querySelector('[data-days]'),
+  hours: document.querySelector('[data-hours]'),
+  minutes: document.querySelector('[data-minutes]'),
+  seconds: document.querySelector('[data-seconds]')
+}
+startBth.disabled = true;
 const options = {
   enableTime: true,
   time_24hr: true,
   defaultDate: new Date(),
   minuteIncrement: 1,
-    onClose(selectedDates) {
-        const currentTime = options.defaultDate.getTime();
-        const selectedTime = selectedDates[0].getTime();
-        // console.log(selectedDates[0]);
-        // console.log(currentTime);
-        // console.log(selectedTime);
-        // const deltaTime = selectedTime - currentTime;
-        // const time = convertMs(deltaTime);
-        // console.log(time)
-        // console.log(deltaTime);
+  onClose(selectedDates) { 
+        const currentTime = Date.now();
         if (selectedDates[0].getTime() > currentTime) {
             startBth.disabled = false;
         }
         else {
-            startBth.disabled = true;
             window.alert("Please choose a date in the future");
         }
     
   },
 };
 
-flatpickr('input#datetime-picker', options);
-
-
-
-startBth.addEventListener('click', handleStartBtnClick);
-
-function handleStartBtnClick() {
-// const current = new Date(options.onClose(selectedDates[0].getTime()));
-console.log(Date.now());
-};
+const result = flatpickr(inputEl, options);
 
 function addLeadingZero(value) {
     return String(value).padStart(2, '0');
 }
 
-function convertMs(ms) {
+ function convertMs(ms) {
   // Number of milliseconds per unit of time
   const second = 1000;
   const minute = second * 60;
@@ -69,6 +58,35 @@ function convertMs(ms) {
 console.log(convertMs(2000)); // {days: 0, hours: 0, minutes: 0, seconds: 2}
 console.log(convertMs(140000)); // {days: 0, hours: 0, minutes: 2, seconds: 20}
 console.log(convertMs(24140000)); // {days: 0, hours: 6 minutes: 42, seconds: 20}
+
+
+startBth.addEventListener('click', handleStartBtnClick);
+
+function handleStartBtnClick() {
+//  const deltaTime = 0;
+  const timerId = setInterval(() => {
+    startBth.disabled = true;
+    const selectedTime = result.selectedDates[0].getTime();
+   const deltaTime = selectedTime - Date.now();
+  
+    const formatTime = convertMs(deltaTime);
+    updateClockface(formatTime);
+    console.log(formatTime);
+
+    if (deltaTime <= 0) {
+      startBth.disabled = false;
+      clearInterval(timerId);
+  }
+  }, 1000);
+};
+
+function updateClockface ({ days, hours, minutes, seconds }) {
+  refs.days.textContent = `${days}`;
+  refs.hours.textContent = `${hours}`;
+  refs.minutes.textContent = `${minutes}`;
+  refs.seconds.textContent = `${seconds}`;
+}
+
 
 
 
