@@ -70,12 +70,14 @@ function handleStartBtnClick() {
     
     startBth.disabled = true;
     const selectedTime = result.selectedDates[0].getTime();
-   const deltaTime = selectedTime - Date.now();
+    const deltaTime = selectedTime - Date.now();
+     const formatTime = convertMs(deltaTime);
   if (deltaTime <= 0) {
-              startBth.disabled = false;
-              clearInterval(timerId);
+    startBth.disabled = false;
+    clearInterval(timerId);
+    return;
           }
-    const formatTime = convertMs(deltaTime);
+   
     updateClockface(formatTime);
     console.log(formatTime);
 
