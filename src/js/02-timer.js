@@ -12,7 +12,9 @@ const refs = {
   minutes: document.querySelector('[data-minutes]'),
   seconds: document.querySelector('[data-seconds]')
 }
+
 startBth.disabled = true;
+
 const options = {
   enableTime: true,
   time_24hr: true,
@@ -26,7 +28,6 @@ const options = {
         else {
             window.alert("Please choose a date in the future");
         }
-    
   },
 };
 
@@ -65,19 +66,22 @@ startBth.addEventListener('click', handleStartBtnClick);
 function handleStartBtnClick() {
 //  const deltaTime = 0;
   const timerId = setInterval(() => {
+    
+    
     startBth.disabled = true;
     const selectedTime = result.selectedDates[0].getTime();
    const deltaTime = selectedTime - Date.now();
-  
+  if (deltaTime <= 0) {
+              startBth.disabled = false;
+              clearInterval(timerId);
+          }
     const formatTime = convertMs(deltaTime);
     updateClockface(formatTime);
     console.log(formatTime);
 
-    if (deltaTime <= 0) {
-      startBth.disabled = false;
-      clearInterval(timerId);
-  }
+    
   }, 1000);
+    
 };
 
 function updateClockface ({ days, hours, minutes, seconds }) {
