@@ -43,10 +43,10 @@ function handleClickPromise(e) {
   e.target.reset();
  }; 
  
- function successPromise({ position, delay }) { 
-    Notiflix.Notify.success(`Fulfilled promise ${position} in ${delay}ms`); 
+function successPromise(position) { 
+    Notiflix.Notify.success(` ${position} `); 
 } 
 
-function failurePromise({ position, delay }) { 
-    Notiflix.Notify.failure(`Rejected promise ${position} in ${delay}ms`); 
+function failurePromise(position) { 
+    Notiflix.Notify.failure(`${position}`); 
 }
